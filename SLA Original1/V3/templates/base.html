@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLA Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='table.css') }}">
+</head>
+<body class="container mt-5">
+    <h2 class="mb-4" align="center" style="background-color: teal; color: white; padding: 10px;">
+        NetPenalty — SLA Compliance Calculator
+    </h2>
+
+    <form action="/report" method="GET" style="position: absolute; right: 20px; top: 22px;">
+        <button class="btn btn-primary" style="color: Blue; background-color: White; padding: 10px 15px; font-size: 14px;">
+            Get Report
+        </button>
+        <a href="{{ url_for('logout') }}" class="logout-btn">
+            Logout
+        </a>
+    </form>
+
+    <div class="top-bar">
+        <span class="welcome-text">
+            <b>Welcome, {{ session['user'] }}</b>
+        </span>
+    </div>
+
+    <br>
+    <form action="/search" method="POST">
+        <div class="input-group mb-3">
+            <label for="name" class="form-label"><b>Service Request</b></label>
+            <input type="text" class="form-control" id="name" name="name">
+
+            <label for="inc_name" class="form-label"><b>Incidents</b></label>
+            <input type="text" class="form-control" id="inc_name" name="inc_name">
+
+            <button class="btn btn-primary" type="submit">Submit</button>
+
+            <input type="checkbox" id="chk_u_red" name="chk_u_red" value="Y" style="margin-left: 50px;">
+            <label for="chk_u_red" class="form-label">Show updated values</label>
+        </div>
+    </form>
+
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

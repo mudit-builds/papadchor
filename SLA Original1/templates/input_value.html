@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if form == 'search' %}
+<form action="/recalculate" method="POST">
+    <div class="center-button mt-3">
+        <button type="submit" class="btn btn-primary">ReCalculate</button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered w-100" id="slaTable" style="padding: 10px 20px;">
+            <thead class="table-dark">
+                <tr>
+                    {% for col in columns %}
+                        <th>{{ col }}</th>
+                    {% endfor %}
+                    <th>Select</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in records %}
+                    <tr data-row="{{ loop.index0 }}">
+                        {% for col in columns %}
+                            <td>
+                                {% if col == 'Updated_Resolved_Time' %}
+                                    <input type="datetime-local"
+                                           name="{{ col }}_{{ loop.index0 }}"
+                                           value="{{ row[col] }}"
+                                           style="background-color: #ccffcc; font-size: 9px; width: 50px; height: 10px;"
+                                           class="form-control form-control-sm editable-input datetime-input" />
+                                {% elif col in ['MRC', 'Targeted Time To Resolution (Min)', 'Fault Duration (Min)',
+                                              'COLT SLA Metrics (Min)', 'Amnt in Euro', 'Cust Delay (Min)'] %}
+                                    <input type="number"
+                                           name="{{ col }}_{{ loop.index0 }}"
+                                           value="{{ row[col] }}"
+                                           style="background-color: #ccffcc; font-size: 9px; width: 50px; height: 10px;"
+                                           step="any"
+                                           class="form-control form-control-sm editable-input number-input" />
+                                {% elif col in ['CURRENCY', 'SLA Amnt', 'REMARKS', 'SLA%'] %}
+                                    <input type="text"
+                                           name="{{ col }}_{{ loop.index0 }}"
+                                           value="{{ row[col] }}"
+                                           style="background-color: #ccffcc; font-size: 9px; width: 50px; height: 10px;"
+                                           class="form-control form-control-sm editable-input text-input" />
+                                {% else %}
+                                    <span class="cell-content">{{ row[col] }}</span>
+                                    <input type="hidden"
+                                           name="{{ col }}_{{ loop.index0 }}"
+                                           value="{{ row[col] }}" />
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                        <td>
+                            <input type="checkbox" name="row_select_{{ loop.index0 }}" class="row-checkbox" />
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</form>
+
+<br>
+
+{% endif %}
+
+{% if form == 'search' and form1 == 'show' %}
+<form action="/download" method="post">
+    <button type="submit" class="btn btn-primary mt-3">Download PDF</button>
+</form>
+
+<h3>Updated Table</h3>
+<div class="table-responsive">
+    <table class="table table-bordered" id="sla_rec">
+        <thead class="table-dark">
+            <tr>
+                {% for col in columns1 %}
+                    <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in records1 %}
+                <tr>
+                    {% for col in columns1 %}
+                        <td>
+                            {{ row[col] }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% endblock %}

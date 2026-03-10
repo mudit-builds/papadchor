@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate SLA Report</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='table.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>📊 Generate SLA Report</h2>
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-message flash-error">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
+        
+        <div style="max-width: 600px; margin: 30px auto; background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+            <form method="POST" action="/generate_report">
+                <div style="margin-bottom: 20px;">
+                    <label for="start_date" class="form-label" style="display: block; margin-bottom: 8px;">Start Date:</label>
+                    <input type="date" 
+                           id="start_date" 
+                           name="start_date" 
+                           class="form-control" 
+                           required 
+                           style="width: 100%;">
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label for="end_date" class="form-label" style="display: block; margin-bottom: 8px;">End Date:</label>
+                    <input type="date" 
+                           id="end_date" 
+                           name="end_date" 
+                           class="form-control" 
+                           required 
+                           style="width: 100%;">
+                </div>
+
+                <div class="center-button">
+                    <button type="submit" class="btn btn-primary">📥 Generate Report</button>
+                    <a href="{{ url_for('base_form') }}" class="btn" style="background: linear-gradient(135deg, #757575 0%, #616161 100%);">
+                        ← Back to Search
+                    </a>
+                </div>
+            </form>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px; color: #666; font-size: 14px;">
+            <p>The report will be downloaded as an Excel file (SLA_Report.xlsx)</p>
+        </div>
+    </div>
+</body>
+</html>
