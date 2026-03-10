@@ -1,0 +1,39 @@
+/* Table Styles */
+table, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+    font-size: 9px;
+}
+
+th {
+    border: 1px solid black;
+    background-color: teal;
+    color: white;
+    padding: 2px;
+    font-size: 10px;
+}
+
+/* Heading Styles */
+h1 {
+    text-align: center;
+    color: teal;
+}
+
+/* Body Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 2px;
+}
+
+/* Button Styles */
+.center-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* Table Spacing */
+#slaTable {
+    border-spacing: 105px 5px;
+}
