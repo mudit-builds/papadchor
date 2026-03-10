@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if form == 'search' %}
+<div style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); margin-bottom: 20px;">
+    <form action="{{ url_for('recalculate') }}" method="POST" novalidate>
+        {% set has_multi_records = records|length > 1 %}
+        <input type="hidden" name="has_multi_select" value="{{ 'Y' if has_multi_records else 'N' }}" />
+        <div class="center-button mt-3">
+            <button type="submit" class="btn btn-primary">🔄 Recalculate SLA</button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered w-100" id="slaTable">
+                <thead class="table-dark">
+                    <tr>
+                        {% if has_multi_records %}
+                            <th>Select</th>
+                        {% endif %}
+                        {% for col in columns %}
+                            <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in records %}
+                        {% set row_idx = loop.index0 %}
+                        <tr data-row="{{ loop.index0 }}">
+                            {% if has_multi_records %}
+                                <td class="text-center">
+                                    <input type="checkbox"
+                                           name="selected_rows"
+                                           value="{{ row_idx }}"
+                                           checked
+                                           title="Select row for update" />
+                                </td>
+                            {% endif %}
+                            {% for col in columns %}
+                                <td>
+                                    {% if loop.first %}
+                                        <input type="hidden" name="row_id" value="{{ row_idx }}" />
+                                    {% endif %}
+                                    {% if col == 'Resolved_Time' %}
+                                        <input type="datetime-local"
+                                               step="1"
+                                               name="{{ col }}_{{ row_idx }}"
+                                               value="{{ row[col] }}"
+                                               class="form-control"
+                                               title="Editable datetime field: {{ col }}" />
+                                         <input type="hidden"
+                                             name="orig_{{ col }}_{{ row_idx }}"
+                                             value="{{ row[col] }}" />
+                                    {% elif col in ['MRC', 'Targeted Time To Resolution (Min)', 'Fault Duration (Min)', 'COLT SLA Metrics (Min)', 'Amnt in Euro', 'Cust Delay (Min)'] %}
+                                        <input type="number"
+                                               step="any"
+                                               name="{{ col }}_{{ row_idx }}"
+                                               value="{{ row[col] }}"
+                                               class="form-control"
+                                               title="Editable numeric field: {{ col }}" />
+                                         <input type="hidden"
+                                             name="orig_{{ col }}_{{ row_idx }}"
+                                             value="{{ row[col] }}" />
+                                    {% elif col in ['CURRENCY', 'SLA%', 'SLA Amnt', 'REMARKS'] %}
+                                        <input type="text"
+                                               name="{{ col }}_{{ row_idx }}"
+                                               value="{{ row[col] }}"
+                                               class="form-control"
+                                               title="Editable field: {{ col }}" />
+                                         <input type="hidden"
+                                             name="orig_{{ col }}_{{ row_idx }}"
+                                             value="{{ row[col] }}" />
+                                    {% else %}
+                                        {{ row[col] }}
+                                        <input type="hidden"
+                                               name="{{ col }}_{{ row_idx }}"
+                                               value="{{ row[col] }}" />
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+{% endif %}
+
+{% if form == 'search' and form1 == 'show' %}
+<div style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+    <div class="center-button">
+        <form action="/download_pdf" method="get" style="margin: 0;">
+            <button type="submit" class="btn btn-primary">📄 Download PDF</button>
+        </form>
+    </div>
+    
+    <h3>✓ Updated SLA Calculation Results</h3>
+    
+    <div class="table-responsive">
+        <table class="table table-bordered" id="sla_rec">
+            <thead class="table-dark">
+                <tr>
+                    {% for col in columns1 %}
+                        <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in records1 %}
+                <tr>
+                    {% for col in columns1 %}
+                        <td>{{ row[col] }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
